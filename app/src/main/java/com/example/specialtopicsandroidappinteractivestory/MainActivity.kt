@@ -1,8 +1,10 @@
 package com.example.specialtopicsandroidappinteractivestory
 
+import android.net.http.HeaderBlock
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
@@ -35,11 +38,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.specialtopicsandroidappinteractivestory.ui.theme.SpecialTopicsAndroidAppInteractiveStoryTheme
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +56,7 @@ class MainActivity : ComponentActivity() {
             SpecialTopicsAndroidAppInteractiveStoryTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+
                     StoryApp()
                 }
             }
@@ -56,20 +65,33 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun StoryApp(modifier: Modifier = Modifier) {
+fun StoryApp(modifier: Modifier = Modifier.fillMaxWidth()) {
 
+    // these are the state handlers for our app
+    // these mutate on ui interactions or background processes
     var currentStoryChapter by remember { mutableIntStateOf(1) }
-    var storyLanguage by remember { mutableStateOf("English") }
+    var storyLanguage by remember { mutableStateOf("Selected Language: English") }
+//    var context by remember { mutableStateOf("Selected Language: English") }
+
 
     Column (
 
     ) {
-        Row {
-            Text(text = "Story App")
+        Row (
+            horizontalArrangement = Arrangement.Center,
+            modifier = modifier
+                .fillMaxWidth()
+                .background(color = MaterialTheme.colorScheme.primary)
+
+        ) {
+//            Text(text = "Story App")
+            AppHeader()
         }
+
         Row (
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(0.dp, 12.dp)
             ,
             horizontalArrangement = Arrangement.SpaceAround
         ) {
@@ -78,19 +100,53 @@ fun StoryApp(modifier: Modifier = Modifier) {
             }
 
 //        the buttons section
-            NavigationButtons()
+            NavigationButtons(
+                storyLanguage = storyLanguage,
+                onStoryLanguageChange = { newLanguage -> storyLanguage = newLanguage }, // it is a generic implicit default value,
+                // meaning we can use it to set the new value anon function values like (String) -> Unit
+            )
 
             Button(onClick = { /*TODO*/ }) {
                 Text(text = ">>")
             }
         }
+        Row {
+            ImageDisplayComponent()
+        }
+
+        Row (modifier = modifier) {
+            StoryContentComponent(modifier = modifier)
+        }
     }
 }
 
+// the header title component
 @Composable
-fun NavigationButtons() {
+fun AppHeader(
+    modifier: Modifier = Modifier
+) {
+        Text(
+            text = stringResource(id = R.string.app_name),
+            modifier = modifier.padding(16.dp),
+            color = Color.White
+            )
+}
+
+@Composable
+fun NavigationButtons(
+    storyLanguage: String,
+    onStoryLanguageChange: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+
     var expanded by remember { mutableStateOf(false) }
-    var context by remember { mutableStateOf("Selected Language: English") }
+    // instead of defining the selected language inside the component,
+    // we will implement what is called state hoisting,
+    // meaning lifting the state variable and mutator at a higher level composable
+    // so other components can make use of it, such as the story container
+//    var context by remember { mutableStateOf(value) } // this is not
+    // used anymore
+
 
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -99,17 +155,18 @@ fun NavigationButtons() {
     ) {
 
 
+        // this will display the current state and expand the
+        // dropdown when clicked
         ClickableText(
-            text = AnnotatedString(context),
+            text = AnnotatedString(storyLanguage),
             onClick = { expanded = !expanded },
             modifier = Modifier
                 .border(2.dp, MaterialTheme.colorScheme.primary, RectangleShape)
                 .padding(12.dp)
+        )
 
-            ,
-
-            )
-
+        // these are the dropdown menu options that will change the state
+        // of the language when we select a nrw
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }
@@ -117,20 +174,67 @@ fun NavigationButtons() {
             DropdownMenuItem(
                 text = { Text("English") },
                 onClick = {
-                    context = "Selected Language: English"
+                    onStoryLanguageChange("Selected Language: French")
                     expanded = false
                 }
             )
             DropdownMenuItem(
                 text = { Text("French") },
                 onClick = {
-                    context = "Selected Language: French"
+                    onStoryLanguageChange("Selected Language: French")
                     expanded = false
                 }
             )
         }
     }
 }
+
+// we are going to create 2 more components: one for displaying the image of
+// the story, and one for displaying the paragraph
+@Composable
+fun ImageDisplayComponent(
+    modifier: Modifier = Modifier
+        .fillMaxWidth()
+        .padding(8.dp, 16.dp)
+) {
+
+    // this image container receives a mutable drawable state that
+    // will change the image accordingly to the state of the current page
+    // change
+    Box(modifier = modifier) {
+        Image(
+            painter = painterResource(id = R.drawable.story_part_1_image), // this will
+            // be replaced my mutanble states
+            contentDescription = "Story Image"
+        )
+    }
+}
+
+@Composable
+fun StoryContentComponent(
+    modifier: Modifier = Modifier
+) {
+
+    Column (
+        modifier = modifier.fillMaxWidth()
+    ) {
+        Text(
+            text = stringResource(id = R.string.story_part_1_title),
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            modifier = modifier.padding(12.dp, 8.dp)
+        )
+        Text(
+            text = stringResource(id = R.string.story_part_1_content),
+            fontSize = 16.sp,
+//            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Justify,
+            modifier = modifier.padding(12.dp, 20.dp)
+        )
+    }
+}
+
 
 
 @Preview(showBackground = true)
