@@ -70,9 +70,15 @@ fun StoryApp(modifier: Modifier = Modifier.fillMaxWidth()) {
     // these are the state handlers for our app
     // these mutate on ui interactions or background processes
     var currentStoryChapter by remember { mutableIntStateOf(1) }
-    var storyLanguage by remember { mutableStateOf("Selected Language: English") }
-//    var context by remember { mutableStateOf("Selected Language: English") }
+    var storyLanguage by remember { mutableStateOf("English") }
 
+    // mutate the story content, title and image depending on the
+    // current story chapter, title and content depend on 2 mutables
+    // story chapter and language
+    var storyTitle by remember { mutableStateOf( "" ) }
+    storyTitle = stringResource(id = R.string.story_part_1_title)
+    var storyContent by remember { mutableStateOf("") }
+    storyContent = stringResource(id = R.string.story_part_1_content)
 
     Column (
 
@@ -95,7 +101,13 @@ fun StoryApp(modifier: Modifier = Modifier.fillMaxWidth()) {
             ,
             horizontalArrangement = Arrangement.SpaceAround
         ) {
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = {
+                // if clicked, it will mutate the state of the current chapter
+                // but make sure it is between 1 and 6
+                if (currentStoryChapter>1) {
+                    currentStoryChapter--
+                }
+            }) {
                 Text(text = "<<")
             }
 
@@ -106,16 +118,24 @@ fun StoryApp(modifier: Modifier = Modifier.fillMaxWidth()) {
                 // meaning we can use it to set the new value anon function values like (String) -> Unit
             )
 
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = {
+                // make sure it doesnt surpass the limits,
+                // the story has 6 chapters so in order to advance, the button should be greyed
+                // out and not allow to advance chapters if current story chapter is 6
+                if (currentStoryChapter<6) {
+                    currentStoryChapter++
+                }
+            }) {
                 Text(text = ">>")
             }
         }
+
         Row {
             ImageDisplayComponent()
         }
 
         Row (modifier = modifier) {
-            StoryContentComponent(modifier = modifier)
+            StoryContentComponent( modifier = modifier)
         }
     }
 }
@@ -158,7 +178,7 @@ fun NavigationButtons(
         // this will display the current state and expand the
         // dropdown when clicked
         ClickableText(
-            text = AnnotatedString(storyLanguage),
+            text = AnnotatedString("Selected language: $storyLanguage"),
             onClick = { expanded = !expanded },
             modifier = Modifier
                 .border(2.dp, MaterialTheme.colorScheme.primary, RectangleShape)
@@ -174,14 +194,14 @@ fun NavigationButtons(
             DropdownMenuItem(
                 text = { Text("English") },
                 onClick = {
-                    onStoryLanguageChange("Selected Language: French")
+                    onStoryLanguageChange("English")
                     expanded = false
                 }
             )
             DropdownMenuItem(
                 text = { Text("French") },
                 onClick = {
-                    onStoryLanguageChange("Selected Language: French")
+                    onStoryLanguageChange("French")
                     expanded = false
                 }
             )
@@ -235,6 +255,38 @@ fun StoryContentComponent(
     }
 }
 
+// have arrays to store the resources ids
+val imageResources = arrayListOf<Int>(
+    R.drawable.story_part_1_image,
+    R.drawable.story_part_2_image,
+    R.drawable.story_part_3_image,
+    R.drawable.story_part_4_image,
+    R.drawable.story_part_5_image,
+    R.drawable.story_part_6_image,
+)
+
+val titleResourcesEnglish = arrayListOf<Int>(
+    R.string.story_part_1_title,
+    R.string.story_part_2_title,
+    R.string.story_part_3_title,
+    R.string.story_part_4_title,
+    R.string.story_part_5_title,
+    R.string.story_part_6_title,
+)
+
+
+// here are some functions to allow us to change the content, image and title
+fun changeImage(chapterNumber: Int, language: String) {
+
+}
+
+fun changeTitle(chapterNumber: Int, language: String) {
+
+}
+
+fun changeLanguage(chapterNumber: Int, language: String) {
+
+}
 
 
 @Preview(showBackground = true)
