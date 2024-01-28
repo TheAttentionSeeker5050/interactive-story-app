@@ -18,7 +18,8 @@
     <string name="story_part_5_content">The sage gifted Ben a magical book, its pages containing answers to all his questions. Armed with newfound knowledge, Ben descended the mountain, returning to Wonderville. He shared the wisdom, and the village transformed into a center of learning and discovery.</string>
     <string name="story_part_6_content">In Wonderville, the once medieval village sparkled with shiny artifacts brought by Ben from the Land of Wisdom. Gears and mystical crystals adorned buildings, blending medieval charm with futuristic allure. The villagers embraced this fusion of old and new, thankful for Ben\'s courage and determination that ushered in a shiny renaissance to their lives. And so, the tale of Brave Ben continued, a timeless story of the pursuit of knowledge.</string>
 
-<!--    selected language labels -->
-    <string name="selected_language_english">Selected Language: English</string>
-    <string name="selected_language_french">Selected Language: French</string>
+<!--    selected language labels, we are not using these, but user is free to use them -->
+    <string name="selected_language_english">English</string>
+    <string name="selected_language_french">French</string>
+    <string name="selected_language_spanish">Spanish</string>
 </resources>

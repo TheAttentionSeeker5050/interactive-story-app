@@ -219,6 +219,13 @@ fun NavigationButtons(
                     expanded = false
                 }
             )
+            DropdownMenuItem(
+                text = { Text("Spanish") },
+                onClick = {
+                    onStoryLanguageChange("Spanish")
+                    expanded = false
+                }
+            )
         }
     }
 }
