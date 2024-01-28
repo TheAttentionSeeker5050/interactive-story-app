@@ -69,17 +69,22 @@ fun StoryApp(modifier: Modifier = Modifier.fillMaxWidth()) {
 
     // these are the state handlers for our app
     // these mutate on ui interactions or background processes
-    var currentStoryChapter by remember { mutableIntStateOf(1) }
+    var storyChapter by remember { mutableIntStateOf(1) }
+    // a great challenge could be to store
+    // the mutable state of story language as an int string resource
     var storyLanguage by remember { mutableStateOf("English") }
 
-    // mutate the story content, title and image depending on the
-    // current story chapter, title and content depend on 2 mutables
-    // story chapter and language
-    var storyTitle by remember { mutableStateOf( "" ) }
-    storyTitle = stringResource(id = R.string.story_part_1_title)
-    var storyContent by remember { mutableStateOf("") }
-    storyContent = stringResource(id = R.string.story_part_1_content)
-
+    // this can be a great way to explain why its better
+    // to store the mutable state as strings resources
+    // (which are integers indexes to the string stored
+    // in our xml files) instead of strings
+//    var storyTitle by remember { mutableStateOf( "" ) }
+//    storyTitle = stringResource(id = R.string.story_part_1_title)
+//    var storyContent by remember { mutableStateOf("") }
+//    storyContent = stringResource(id = R.string.story_part_1_content)
+    var storyImageResource by remember { mutableIntStateOf(R.drawable.story_part_1_image) }
+    var storyTitleResource by remember { mutableIntStateOf(R.string.story_part_1_title) }
+    var storyContentResource by remember { mutableIntStateOf(R.string.story_part_1_content) }
     Column (
 
     ) {
@@ -104,9 +109,13 @@ fun StoryApp(modifier: Modifier = Modifier.fillMaxWidth()) {
             Button(onClick = {
                 // if clicked, it will mutate the state of the current chapter
                 // but make sure it is between 1 and 6
-                if (currentStoryChapter>1) {
-                    currentStoryChapter--
+                if (storyChapter>1) {
+                    storyChapter--
                 }
+                storyImageResource = changeImage(chapterNumber=storyChapter)
+                storyTitleResource = changeTitle(chapterNumber=storyChapter, language=storyLanguage)
+                storyContentResource = changeContent(chapterNumber=storyChapter, language=storyLanguage)
+
             }) {
                 Text(text = "<<")
             }
@@ -122,20 +131,25 @@ fun StoryApp(modifier: Modifier = Modifier.fillMaxWidth()) {
                 // make sure it doesnt surpass the limits,
                 // the story has 6 chapters so in order to advance, the button should be greyed
                 // out and not allow to advance chapters if current story chapter is 6
-                if (currentStoryChapter<6) {
-                    currentStoryChapter++
+                if (storyChapter<6) {
+                    storyChapter++
                 }
+
+                storyImageResource = changeImage(chapterNumber=storyChapter)
+                storyTitleResource = changeTitle(chapterNumber=storyChapter, language=storyLanguage)
+                storyContentResource = changeContent(chapterNumber=storyChapter, language=storyLanguage)
+
             }) {
                 Text(text = ">>")
             }
         }
 
         Row {
-            ImageDisplayComponent()
+            ImageDisplayComponent(imageResurce = storyImageResource)
         }
 
         Row (modifier = modifier) {
-            StoryContentComponent( modifier = modifier)
+            StoryContentComponent(titleResource = storyTitleResource, contentResource=storyContentResource, modifier = modifier)
         }
     }
 }
@@ -213,6 +227,7 @@ fun NavigationButtons(
 // the story, and one for displaying the paragraph
 @Composable
 fun ImageDisplayComponent(
+    imageResurce: Int,
     modifier: Modifier = Modifier
         .fillMaxWidth()
         .padding(8.dp, 16.dp)
@@ -223,7 +238,7 @@ fun ImageDisplayComponent(
     // change
     Box(modifier = modifier) {
         Image(
-            painter = painterResource(id = R.drawable.story_part_1_image), // this will
+            painter = painterResource(id = imageResurce), // this will
             // be replaced my mutanble states
             contentDescription = "Story Image"
         )
@@ -232,6 +247,8 @@ fun ImageDisplayComponent(
 
 @Composable
 fun StoryContentComponent(
+    titleResource: Int,
+    contentResource: Int,
     modifier: Modifier = Modifier
 ) {
 
@@ -239,14 +256,14 @@ fun StoryContentComponent(
         modifier = modifier.fillMaxWidth()
     ) {
         Text(
-            text = stringResource(id = R.string.story_part_1_title),
+            text = stringResource(id = titleResource),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
             modifier = modifier.padding(12.dp, 8.dp)
         )
         Text(
-            text = stringResource(id = R.string.story_part_1_content),
+            text = stringResource(id = contentResource),
             fontSize = 16.sp,
 //            fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Justify,
@@ -274,20 +291,56 @@ val titleResourcesEnglish = arrayListOf<Int>(
     R.string.story_part_6_title,
 )
 
+val contentResourcesEnglish = arrayListOf<Int>(
+    R.string.story_part_1_content,
+    R.string.story_part_2_content,
+    R.string.story_part_3_content,
+    R.string.story_part_4_content,
+    R.string.story_part_5_content,
+    R.string.story_part_6_content,
+)
 
 // here are some functions to allow us to change the content, image and title
-fun changeImage(chapterNumber: Int, language: String) {
-
+fun changeImage(chapterNumber: Int):Int {
+    return when (chapterNumber) {
+        1 -> imageResources[0]
+        2 -> imageResources[1]
+        3 -> imageResources[2]
+        4 -> imageResources[3]
+        5 -> imageResources[4]
+        else -> imageResources[5]
+    }
 }
 
-fun changeTitle(chapterNumber: Int, language: String) {
-
+// these functions are suitable for a challenge, the resource depends on 2 variables,
+// I will only explain how to change with chapter number, but changing the language will
+// change the mutable language variable but not change the language
+/// of the title or the story, so it is up to the student to add a controller logic for this
+fun changeTitle(chapterNumber: Int, language: String): Int {
+    return when (chapterNumber) {
+        1 -> titleResourcesEnglish[0]
+        2 -> titleResourcesEnglish[1]
+        3 -> titleResourcesEnglish[2]
+        4 -> titleResourcesEnglish[3]
+        5 -> titleResourcesEnglish[4]
+        else -> titleResourcesEnglish[5]
+    }
 }
 
 fun changeLanguage(chapterNumber: Int, language: String) {
 
 }
 
+fun changeContent(chapterNumber: Int, language: String): Int {
+    return when (chapterNumber) {
+        1 -> contentResourcesEnglish[0]
+        2 -> contentResourcesEnglish[1]
+        3 -> contentResourcesEnglish[2]
+        4 -> contentResourcesEnglish[3]
+        5 -> contentResourcesEnglish[4]
+        else -> contentResourcesEnglish[5]
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
