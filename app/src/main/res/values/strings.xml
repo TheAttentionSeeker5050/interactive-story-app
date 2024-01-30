@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Special Topics Android App Interactive Story</string>
+    <string name="app_name">Story App</string>
 
 <!--    the main story title -->
     <string name="story_title">The Curious Quest of Brave Ben</string>
@@ -13,9 +13,13 @@
 <!--    the story chapter content -->
     <string name="story_part_1_content">In the village of Wonderville, surrounded by emerald hills and babbling brooks, there lived an inquisitive boy named Brave Ben. One day, as he explored the mystical forest, Ben stumbled upon an ancient book with a shimmering leather cover. The book whispered tales of a distant land, a magical Land of Wisdom filled with treasures of knowledge.</string>
     <string name="story_part_2_content">The guidebook revealed the Forest of Focus, where distractions took the form of playful fairies and mischievous talking animals. Undaunted, Ben entered the wooded labyrinth. With determination in his eyes, Ben resisted enchanting distractions, keeping his focus on the path, understanding the importance of staying true to his quest.</string>
-    <string name="story_part_3_content">Beyond the forest lay the River of Resolve, a fast-flowing stream testing one's determination. Ben constructed a robust raft from the ancient trees, sailing through challenges while keeping the Land of Wisdom in his sights.</string>
-    <string name="story_part_4_content">As Ben reached the mountain's base, he encountered riddles and puzzles. The air grew thinner, the climb steeper, but fueled by his passion for knowledge, Ben pressed on. At the summit, the wise Sage of the Land of Wisdom awaited, impressed by Ben's determination and intellect.</string>
+    <string name="story_part_3_content">Beyond the forest lay the River of Resolve, a fast-flowing stream testing one\'s determination. Ben constructed a robust raft from the ancient trees, sailing through challenges while keeping the Land of Wisdom in his sights.</string>
+    <string name="story_part_4_content">As Ben reached the mountain\'s base, he encountered riddles and puzzles. The air grew thinner, the climb steeper, but fueled by his passion for knowledge, Ben pressed on. At the summit, the wise Sage of the Land of Wisdom awaited, impressed by Ben\'s determination and intellect.</string>
     <string name="story_part_5_content">The sage gifted Ben a magical book, its pages containing answers to all his questions. Armed with newfound knowledge, Ben descended the mountain, returning to Wonderville. He shared the wisdom, and the village transformed into a center of learning and discovery.</string>
-    <string name="story_part_6_content">In Wonderville, the once medieval village sparkled with shiny artifacts brought by Ben from the Land of Wisdom. Gears and mystical crystals adorned buildings, blending medieval charm with futuristic allure. The villagers embraced this fusion of old and new, thankful for Ben's courage and determination that ushered in a shiny renaissance to their lives. And so, the tale of Brave Ben continued, a timeless story of the pursuit of knowledge.</string>
+    <string name="story_part_6_content">In Wonderville, the once medieval village sparkled with shiny artifacts brought by Ben from the Land of Wisdom. Gears and mystical crystals adorned buildings, blending medieval charm with futuristic allure. The villagers embraced this fusion of old and new, thankful for Ben\'s courage and determination that ushered in a shiny renaissance to their lives. And so, the tale of Brave Ben continued, a timeless story of the pursuit of knowledge.</string>
 
+<!--    selected language labels, we are not using these, but user is free to use them -->
+    <string name="selected_language_english">English</string>
+    <string name="selected_language_french">French</string>
+    <string name="selected_language_spanish">Spanish</string>
 </resources>
